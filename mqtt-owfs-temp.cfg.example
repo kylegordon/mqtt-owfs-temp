@@ -1,0 +1,6 @@
+[global]
+DEBUG = True
+LOGFILE = /var/log/mqtt-owfs-temp.log
+MQTT_HOST = 10.8.0.1
+MQTT_PORT = 1883
+MQTT_TOPIC = /#
