@@ -130,7 +130,7 @@ def main_loop():
         logging.debug("Looping")
 	deviceid = "/" + "28.C8D40D040000"
 	device = ow.Sensor(deviceid)
-	mqttc.publish(MQTT_TOPIC + "deviceid", device.temperature)
+	mqttc.publish(MQTT_TOPIC + deviceid, device.temperature)
 	
 	time.sleep(POLLINTERVAL)
     
