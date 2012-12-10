@@ -13,6 +13,7 @@ import time
 
 import mosquitto
 import ConfigParser
+import ow
 
 from datetime import datetime, timedelta
 
@@ -109,6 +110,9 @@ def main_loop():
     """
     while mqttc.loop() == 0:
         logging.debug("Looping")
+    
+    # One wire is a bit slow, and we're not worried about fast polling
+    time.sleep(60)
         
 # Use the signal module to handle signals
 signal.signal(signal.SIGTERM, cleanup)
