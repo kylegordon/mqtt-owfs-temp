@@ -1,0 +1,5 @@
+# Server, port, sensor path
+kitchenpi.vpn.glasgownet.com, 4304, /28.C8D40D040000/temperature
+kitchenpi.vpn.glasgownet.com, 4304, /28.DDBF1D030000/temperature
+kitchenpi.vpn.glasgownet.com, 4304, /28.3C4F1D030000/temperature
+loftpi.vpn.glasgownet.com, 4304, /28.3C4F1D030000/temperature
