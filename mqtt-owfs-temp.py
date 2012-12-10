@@ -91,13 +91,6 @@ def on_connect(result_code):
      if result_code == 0:
         logging.info("Connected to broker")
         mqttc.publish("/status/" + socket.getfqdn(), "Online")
-	# FIXME owserver to come from a list of devices, and their respective servers
-	ow.init(owserver + ":4304")
-        ow.error_level(ow.error_level.fatal)
-        ow.error_print(ow.error_print.stderr)
-	# FIXME This possibly needs done for each 1-wire host
-	# Enable simultaneous temperature conversion
-	ow._put('/simultaneous/temperature','1')
      else:
         logging.warning("Something went wrong")
         cleanup()
@@ -128,6 +121,14 @@ def main_loop():
     """
     while mqttc.loop() == 0:
         logging.debug("Looping")
+        # FIXME owserver to come from a list of devices, and their respective servers
+        ow.init(owserver + ":4304")
+        ow.error_level(ow.error_level.fatal)
+        ow.error_print(ow.error_print.stderr)
+        # FIXME This possibly needs done for each 1-wire host
+        # Enable simultaneous temperature conversion
+        ow._put('/simultaneous/temperature','1')
+	# do this for each item on server
 	deviceid = "/" + "28.C8D40D040000"
 	device = ow.Sensor(deviceid)
 	mqttc.publish(MQTT_TOPIC + deviceid, device.temperature)
