@@ -129,9 +129,6 @@ def main_loop():
 	device = ow.Sensor(deviceid)
 	mqttc.publish(MQTT_TOPIC + "deviceid", device.temperature)
     
-    # One wire is a bit slow, and we're not worried about fast polling
-    time.sleep(60)
-        
 # Use the signal module to handle signals
 signal.signal(signal.SIGTERM, cleanup)
 signal.signal(signal.SIGINT, cleanup)
