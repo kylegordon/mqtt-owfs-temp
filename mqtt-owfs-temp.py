@@ -27,11 +27,18 @@ LOGFILE = config.get("global", "logfile")
 MQTT_HOST = config.get("global", "mqtt_host")
 MQTT_PORT = config.getint("global", "mqtt_port")
 
-MQTT_TOPIC= config.get("global", "MQTT_TOPIC")
+MQTT_TOPIC="/raw/" + socket.getfqdn()
+
+# FIXME, have list of devices - ie
+# kitchenpi.vpn.glasgownet.com, 4304, /28.C8D40D040000/temperature
+# kitchenpi.vpn.glasgownet.com, 4304, /28.DDBF1D030000/temperature
+# kitchenpi.vpn.glasgownet.com, 4304, /28.3C4F1D030000/temperature
+# loftpi.vpn.glasgownet.com, 4304, /28.3C4F1D030000/temperature
+
+owserver = "kitchenpi.vpn.glasgownet.com"
 
 client_id = "Readmeter_%d" % os.getpid()
 mqttc = mosquitto.Mosquitto(client_id)
-offpublished = False
 
 LOGFORMAT = '%(asctime)-15s %(message)s'
 
@@ -81,6 +88,13 @@ def on_connect(result_code):
      if result_code == 0:
         logging.info("Connected to broker")
         mqttc.publish("/status/" + socket.getfqdn(), "Online")
+	# FIXME owserver to come from a list of devices, and their respective servers
+	ow.init(owserver + ":4304")
+        ow.error_level(ow.error_level.fatal)
+        ow.error_print(ow.error_print.stderr)
+	# FIXME This possibly needs done for each 1-wire host
+	# Enable simultaneous temperature conversion
+	ow._put('/simultaneous/temperature','1')
      else:
         logging.warning("Something went wrong")
         cleanup()
@@ -91,6 +105,7 @@ def on_disconnect(result_code):
      """
      if result_code == 0:
         logging.info("Clean disconnection")
+        ow.finish
      else:
         logging.info("Unexpected disconnection! Reconnecting in 5 seconds")
         logging.debug("Result code: %s", result_code)
@@ -110,6 +125,9 @@ def main_loop():
     """
     while mqttc.loop() == 0:
         logging.debug("Looping")
+	deviceid = "/" + "28.C8D40D040000"
+	device = ow.Sensor(deviceid)
+	mqttc.publish(MQTT_TOPIC + "deviceid", device.temperature)
     
     # One wire is a bit slow, and we're not worried about fast polling
     time.sleep(60)
