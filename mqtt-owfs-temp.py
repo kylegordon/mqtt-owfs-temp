@@ -10,6 +10,7 @@ import logging
 import signal
 import socket
 import time
+import sys
 
 import mosquitto
 import ConfigParser
@@ -28,6 +29,8 @@ MQTT_HOST = config.get("global", "mqtt_host")
 MQTT_PORT = config.getint("global", "mqtt_port")
 
 MQTT_TOPIC="/raw/" + socket.getfqdn()
+
+POLLINTERVAL = config.getint("global", "pollinterval")
 
 # FIXME, have list of devices - ie
 # kitchenpi.vpn.glasgownet.com, 4304, /28.C8D40D040000/temperature
@@ -128,6 +131,8 @@ def main_loop():
 	deviceid = "/" + "28.C8D40D040000"
 	device = ow.Sensor(deviceid)
 	mqttc.publish(MQTT_TOPIC + "deviceid", device.temperature)
+	
+	time.sleep(POLLINTERVAL)
     
 # Use the signal module to handle signals
 signal.signal(signal.SIGTERM, cleanup)
