@@ -31,6 +31,7 @@ MQTT_PORT = config.getint("global", "mqtt_port")
 MQTT_TOPIC="/raw/" + socket.getfqdn()
 
 POLLINTERVAL = config.getint("global", "pollinterval")
+DEVICESFILE = config.get("global", "devicesfile")
 
 # FIXME, have list of devices - ie
 # kitchenpi.vpn.glasgownet.com, 4304, /28.C8D40D040000/temperature
@@ -115,23 +116,37 @@ def on_message(msg):
     """
     logging.debug("Received: " + msg.topic)
 
+class DevicesList():
+    """
+    Read the list of devices, and expand to include publishing state and current value
+    """
+    import csv
+    datafile = open(DEVICESFILE, 'r')
+    datareader = csv.reader(datafile)
+    data = []
+    for row in datareader:
+        data.append(row)
+    print data
+
 def main_loop():
     """
     The main loop in which we stay connected to the broker
     """
     while mqttc.loop() == 0:
         logging.debug("Looping")
+	print DevicesList.data[0]
+
         # FIXME owserver to come from a list of devices, and their respective servers
-        ow.init(owserver + ":4304")
-        ow.error_level(ow.error_level.fatal)
-        ow.error_print(ow.error_print.stderr)
+        #ow.init(owserver + ":4304")
+        #ow.error_level(ow.error_level.fatal)
+        #ow.error_print(ow.error_print.stderr)
         # FIXME This possibly needs done for each 1-wire host
         # Enable simultaneous temperature conversion
-        ow._put('/simultaneous/temperature','1')
+        #ow._put('/simultaneous/temperature','1')
 	# do this for each item on server
-	deviceid = "/" + "28.C8D40D040000"
-	device = ow.Sensor(deviceid)
-	mqttc.publish(MQTT_TOPIC + deviceid, device.temperature)
+	#deviceid = "/" + "28.C8D40D040000"
+	#device = ow.Sensor(deviceid)
+	#mqttc.publish(MQTT_TOPIC + deviceid, device.temperature)
 	
 	time.sleep(POLLINTERVAL)
     
