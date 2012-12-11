@@ -5,4 +5,4 @@ MQTT_HOST = 10.8.0.1
 MQTT_PORT = 1883
 MQTT_TOPIC = /#
 POLLINTERVAL = 60
-MAPFILE = /etc/mqtt-owfs-temp/devices.csv
+DEVICESFILE = /etc/mqtt-owfs-temp/devices.csv
