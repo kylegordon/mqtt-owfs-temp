@@ -44,16 +44,16 @@ owserver = "kitchenpi.vpn.glasgownet.com"
 client_id = "Readmeter_%d" % os.getpid()
 mqttc = mosquitto.Mosquitto(client_id)
 
-LOGFORMAT = '%(asctime)-15s %(message)s'
+LOGFORMAT = "%(asctime)-15s %(message)s"
 
 if DEBUG:
     logging.basicConfig(filename=LOGFILE, level=logging.DEBUG, format=LOGFORMAT)
 else:
     logging.basicConfig(filename=LOGFILE, level=logging.INFO, format=LOGFORMAT)
 
-logging.info('Starting mqtt-owfs-temp')
-logging.info('INFO MODE')
-logging.debug('DEBUG MODE')
+logging.info("Starting mqtt-owfs-temp")
+logging.info("INFO MODE")
+logging.debug("DEBUG MODE")
 
 def cleanup(signum, frame):
      """
@@ -123,14 +123,14 @@ def find_in_sublists(lst, value):
         except ValueError:
             pass
 
-    raise ValueError('%s is not in lists' % value)
+    raise ValueError("%s is not in lists" % value)
 
 class DevicesList():
     """
     Read the list of devices, and expand to include publishing state and current value
     """
     import csv
-    datafile = open(DEVICESFILE, 'r')
+    datafile = open(DEVICESFILE, "r")
     datareader = csv.reader(datafile)
     data = []
     for row in datareader:
@@ -158,7 +158,7 @@ def main_loop():
             # FIXME This possibly needs done for each 1-wire host
             # Split it off to the connect() function
             # Enable simultaneous temperature conversion
-            ow._put('/simultaneous/temperature','1')
+            ow._put("/simultaneous/temperature","1")
             
             # Create sensor object
             sensor = ow.Sensor(owpath)
