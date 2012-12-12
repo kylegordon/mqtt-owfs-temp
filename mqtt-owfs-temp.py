@@ -144,6 +144,7 @@ def main_loop():
 	logging.debug(("DeviceList.data is : %s") % (str(DevicesList.data)))
 	item = 0
 	for device in DevicesList.data:
+            # Split up list into relevant parts for reuse
             owserver = DevicesList.data[item][0]
             owport = DevicesList.data[item][1]
             owpath = DevicesList.data[item][2]
@@ -158,8 +159,11 @@ def main_loop():
             # Split it off to the connect() function
             # Enable simultaneous temperature conversion
             ow._put('/simultaneous/temperature','1')
-	
+            
+            # Create sensor object
             sensor = ow.Sensor(owpath)
+            
+            #Query sensor state
             logging.debug(("Sensor %s : %s") % (owpath, sensor.temperature))
 	    mqttc.publish(MQTT_TOPIC + owpath, sensor.temperature)
 	    item += 1
