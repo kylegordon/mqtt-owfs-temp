@@ -116,6 +116,15 @@ def on_message(msg):
     """
     logging.debug("Received: " + msg.topic)
 
+def find_in_sublists(lst, value):
+    for sub_i, sublist in enumerate(lst):
+        try:
+            return (sub_i, sublist.index(value))
+        except ValueError:
+            pass
+
+    raise ValueError('%s is not in lists' % value)
+
 class DevicesList():
     """
     Read the list of devices, and expand to include publishing state and current value
@@ -126,27 +135,34 @@ class DevicesList():
     data = []
     for row in datareader:
         data.append(row)
-    print data
 
 def main_loop():
     """
     The main loop in which we stay connected to the broker
     """
     while mqttc.loop() == 0:
-        logging.debug("Looping")
-	print DevicesList.data[0]
+	logging.debug(("DeviceList.data is : %s") % (str(DevicesList.data)))
+	item = 0
+	for device in DevicesList.data:
+            owserver = DevicesList.data[item][0]
+            owport = DevicesList.data[item][1]
+            owpath = DevicesList.data[item][2]
+	    logging.debug(("Querying %s on %s:%s") % (owpath, owserver, owport))
 
-        # FIXME owserver to come from a list of devices, and their respective servers
-        #ow.init(owserver + ":4304")
-        #ow.error_level(ow.error_level.fatal)
-        #ow.error_print(ow.error_print.stderr)
-        # FIXME This possibly needs done for each 1-wire host
-        # Enable simultaneous temperature conversion
-        #ow._put('/simultaneous/temperature','1')
-	# do this for each item on server
-	#deviceid = "/" + "28.C8D40D040000"
-	#device = ow.Sensor(deviceid)
-	#mqttc.publish(MQTT_TOPIC + deviceid, device.temperature)
+            # FIXME owserver to come from a list of devices, and their respective servers
+            ow.init(owserver + ":" + owport)
+            ow.error_level(ow.error_level.fatal)
+            ow.error_print(ow.error_print.stderr)
+        
+            # FIXME This possibly needs done for each 1-wire host
+            # Split it off to the connect() function
+            # Enable simultaneous temperature conversion
+            ow._put('/simultaneous/temperature','1')
+	
+            sensor = ow.Sensor(owpath)
+            logging.debug(("Sensor %s : %s") % (owpath, sensor.temperature))
+	    mqttc.publish(MQTT_TOPIC + owpath, sensor.temperature)
+	    item += 1
 	
 	time.sleep(POLLINTERVAL)
     
