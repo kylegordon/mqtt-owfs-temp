@@ -1,0 +1,16 @@
+SUMMARY
+=======
+
+This script will read a list of hosts, ports and devices from /etc/mqtt-owfs-temp/devices.csv, query the devices from the relevant owserver instance, and publish the results over MQTT
+
+INSTALL
+=======
+
+mkdir /usr/local/mqtt-owfs-temp/ /etc/mqtt-owfs-temp/
+cd /usr/local/
+git clone git://github.com/kylegordon/mqtt-owfs-temp.git
+cp mqtt-owfs-temp.cfg.example /etc/mqtt-owfs-temp/mqtt-owfs-temp.cfg
+cp mqtt-owfs-temp.init /etc/init.d/mqtt-owfs-temp
+update-rc.d mqtt-owfs-temp defaults
+cp mqtt-owfs-temp.default /etc/default/mqtt-owfs-temp
+/etc/init.d/mqtt-owfs-temp start
