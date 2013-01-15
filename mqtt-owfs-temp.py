@@ -160,14 +160,19 @@ def main_loop():
             # Enable simultaneous temperature conversion
             ow._put("/simultaneous/temperature","1")
             
-            # Create sensor object
-            sensor = ow.Sensor(owpath)
+            try:
+	        # Create sensor object
+                sensor = ow.Sensor(owpath)
             
-            #Query sensor state
-            logging.debug(("Sensor %s : %s") % (owpath, sensor.temperature))
-	    mqttc.publish(MQTT_TOPIC + owpath, sensor.temperature)
-	    item += 1
-	
+                #Query sensor state
+                logging.debug(("Sensor %s : %s") % (owpath, sensor.temperature))
+	        mqttc.publish(MQTT_TOPIC + owpath, sensor.temperature)
+	        item += 1
+	    
+	    except ow.exUnknownSensor:
+	        logging.info("Threw an unknown sensor exception for device %s. Continuing", owpath)
+	        continue
+
 	time.sleep(POLLINTERVAL)
     
 # Use the signal module to handle signals
