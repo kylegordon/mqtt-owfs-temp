@@ -41,7 +41,7 @@ DEVICESFILE = config.get("global", "devicesfile")
 
 owserver = "kitchenpi.vpn.glasgownet.com"
 
-client_id = "Readmeter_%d" % os.getpid()
+client_id = "owfs_%d" % os.getpid()
 mqttc = mosquitto.Mosquitto(client_id)
 
 LOGFORMAT = "%(asctime)-15s %(message)s"
