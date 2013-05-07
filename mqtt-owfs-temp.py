@@ -4,7 +4,6 @@
 __author__ = "Kyle Gordon"
 __copyright__ = "Copyright (C) Kyle Gordon"
 
-import mosquitto
 import os
 import logging
 import signal
