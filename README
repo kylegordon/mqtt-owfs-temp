@@ -6,11 +6,17 @@ This script will read a list of hosts, ports and devices from /etc/mqtt-owfs-tem
 INSTALL
 =======
 
-mkdir /usr/local/mqtt-owfs-temp/ /etc/mqtt-owfs-temp/
-cd /usr/local/
-git clone git://github.com/kylegordon/mqtt-owfs-temp.git
-cp mqtt-owfs-temp.cfg.example /etc/mqtt-owfs-temp/mqtt-owfs-temp.cfg
-cp mqtt-owfs-temp.init /etc/init.d/mqtt-owfs-temp
+sudo apt-get install python-mosquitto git
+mkdir /etc/mqtt-owfs-temp/
+git clone git://github.com/kylegordon/mqtt-owfs-temp.git /usr/local/mqtt-owfs-temp/
+cp /usr/local/mqtt-owfs-temp/mqtt-owfs-temp.cfg.example /etc/mqtt-owfs-temp/mqtt-owfs-temp.cfg
+cp /usr/local/mqtt-owfs-temp/mqtt-owfs-temp.init /etc/init.d/mqtt-owfs-temp
 update-rc.d mqtt-owfs-temp defaults
-cp mqtt-owfs-temp.default /etc/default/mqtt-owfs-temp
+cp /usr/local/mqtt-owfs-temp/mqtt-owfs-temp.default /etc/default/mqtt-owfs-temp
+## Edit /etc/default/mqtt-owfs-temp and /etc/mqtt-owfs-temp/mqtt-owfs-temp.cfg to suit
 /etc/init.d/mqtt-owfs-temp start
+
+SERVER
+======
+
+If you are interested in running a 1-wire owserver instance on a Raspberry Pi, I have written a short guide here http://lodge.glasgownet.com/2012/11/14/owfs-server-on-the-raspberry-pi/
