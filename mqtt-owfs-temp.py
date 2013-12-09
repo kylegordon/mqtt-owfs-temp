@@ -172,6 +172,7 @@ def main_loop():
 	        logging.info("Threw an unknown sensor exception for device %s. Continuing", owpath)
 	        continue
 
+	# We only want to poll the sensors occasionally... not every one second that's the default for mqttc.loop
 	time.sleep(POLLINTERVAL)
     
 # Use the signal module to handle signals
