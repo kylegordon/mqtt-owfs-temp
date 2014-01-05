@@ -206,7 +206,7 @@ def process_connection():
     logging.debug("Processing connection")
 
 
-def process_message(msg):
+def process_message(mosq, obj, msg):
     """
     What to do with the message that's arrived
     """
