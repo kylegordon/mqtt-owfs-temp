@@ -14,6 +14,7 @@ import sys
 import mosquitto
 import ConfigParser
 import ow
+import setproctitle
 
 from datetime import datetime, timedelta
 
@@ -42,6 +43,7 @@ owserver = "kitchenpi.vpn.glasgownet.com"
 
 APPNAME = "mqtt-owfs-temp"
 PRESENCETOPIC = "clients/" + socket.getfqdn() + "/" + APPNAME + "/state"
+setproctitle.setproctitle(APPNAME)
 client_id = APPNAME + "_%d" % os.getpid()
 mqttc = mosquitto.Mosquitto(client_id)
 
